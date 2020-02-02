@@ -94,9 +94,18 @@ class Game extends React.Component {
             'Go to game start';
             const squares = history[move];
             const location = '(' + squares.location[0] + ', ' + squares.location[1] + ')';
+            let isCurrentStep = false;
+            if (move === this.state.stepNumber) {
+                isCurrentStep = true;
+            }
             return (
                 <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{desc}{location}</button>
+                    <button
+                        onClick={() => this.jumpTo(move)}
+                        style={isCurrentStep ? { fontWeight: 'bold' } : { fontWeight: 'normal' }}
+                    >
+                        {desc}{location}
+                    </button>
                 </li>
             );
         });
