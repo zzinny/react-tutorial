@@ -5,7 +5,7 @@ import './index.css';
 function Square(props) {
     return (
         // To save typing and avoid 'confusing behavior of this', we will use arrow funcion. 
-        <button className="square" onClick={props.onClick}>
+        <button className="square" onClick={props.onClick} style={{color: props.color}}>
             {props.value}
         </button>
     );
@@ -16,6 +16,7 @@ class Board extends React.Component {
         return (
             <Square
             value={this.props.squares[i]}
+            color={ this.props.winner.includes(i) ? '#ff5c5c' : 'black' }
             onClick={() => this.props.onClick(i)}
             />
         );
@@ -116,8 +117,10 @@ class Game extends React.Component {
         });
 
         let status;
+        let winnerArea = [];
         if (winner) {
-            status = 'Winner: ' + winner;
+            status = 'Winner: ' + winner.winner;
+            winnerArea = winner.winnerArea;
         } else {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
@@ -129,6 +132,7 @@ class Game extends React.Component {
                 <div className="game-board">
                 <Board 
                     squares={current.squares}
+                    winner={winnerArea}
                     onClick={(i) => this.handleClick(i)}
                 />
                 </div>
@@ -163,7 +167,10 @@ function calculateWinner(squares) {
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+        return {
+            winner: squares[a],
+            winnerArea: lines[i],
+        };
       }
     }
     return null;
